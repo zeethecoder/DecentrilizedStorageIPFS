@@ -1,37 +1,85 @@
-pragma solidity ^0.5.0;
+pragma solidity >=0.5.0;
 
 contract DStorage {
-  // Name
-  // Number of files
-  // Mapping fileId=>Struct 
+    string public Name = "DStorage";
 
-  // Struct
+    uint256 public fileCount = 0;
+    // Mapping fileId=>Struct
 
+    mapping(uint256 => File) public files;
 
-  // Event
+    // Struct
+    struct File {
+        uint256 fileId;
+        string fileHash;
+        uint256 fileSize;
+        string fileType;
+        string fileName;
+        string fileDescription;
+        uint256 uploadTime;
+        address uploader;
+    }
 
-  constructor() public {
-  }
+    // Event
 
-  // Upload File function
+    event FileUploaded(
+        uint256 fileId,
+        string fileHash,
+        uint256 fileSize,
+        string fileType,
+        string fileName,
+        string fileDescription,
+        uint256 uploadTime,
+        address uploader
+    );
 
-    // Make sure the file hash exists
+    constructor() public {}
 
-    // Make sure file type exists
+    // Upload File function
 
-    // Make sure file description exists
+    function uploadFile(
+        string memory _fileHash,
+        uint256 _fileSize,
+        string memory _fileType,
+        string memory _fileName,
+        string memory _fileDescription
+    ) public {
+        // Make sure the file hash exists
+        require(bytes(_fileHash).length > 0);
+        // Make sure file type exists
+        require(bytes(_fileType).length > 0);
+        // Make sure file description exists
+        require(bytes(_fileDescription).length > 0);
+        // Make sure file fileName exists
+        require(bytes(_fileName).length > 0);
+        // Make sure uploader address exists
+        require(msg.sender != address(0));
+        // Make sure file size is more than 0
+        require(_fileSize > 0);
 
-    // Make sure file fileName exists
+        fileCount++;
 
-    // Make sure uploader address exists
+        files[fileCount] = File(
+            1,
+            _fileHash,
+            _fileSize,
+            _fileType,
+            _fileName,
+            _fileDescription,
+            block.timestamp,
+            msg.sender
+        );
 
-    // Make sure file size is more than 0
-
-
-    // Increment file id
-
-    // Add File to the contract
-
-    // Trigger an event
-
+        // Trigger an event
+        emit FileUploaded(
+            1,
+            _fileHash,
+            _fileSize,
+            _fileType,
+            _fileName,
+            _fileDescription,
+            block.timestamp,
+            msg.sender
+        );
+    }
 }
